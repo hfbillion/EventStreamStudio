@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EventStream Studio 演示页</title>
+    <style>
+      body { max-width: 720px; margin: 80px auto; padding: 0 24px; color: #183028; background: #f3f8f5; font: 15px/1.7 system-ui, sans-serif; }
+      main { padding: 30px; background: white; border: 1px solid #dce7e1; border-radius: 16px; box-shadow: 0 18px 50px #244d3d12; }
+      h1 { margin-top: 0; font-size: 25px; } code { color: #087f5b; }
+      #state { display: inline-flex; align-items: center; gap: 8px; padding: 5px 10px; color: #087f5b; background: #e3f7ee; border-radius: 999px; }
+      #state::before { content: ""; width: 7px; height: 7px; background: #0ba476; border-radius: 50%; }
+      pre { min-height: 150px; padding: 14px; overflow: auto; color: #d7eee5; background: #14221d; border-radius: 9px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>EventStream Studio 演示</h1>
+      <p>打开 Chrome DevTools 的 <code>EventStream</code> 面板，然后刷新本页。服务端每 1.5 秒发送一条 JSON 事件。</p>
+      <p id="state">正在连接</p>
+      <pre id="log">等待事件…</pre>
+    </main>
+    <script>
+      const output = document.querySelector("#log");
+      const state = document.querySelector("#state");
+      const stream = new EventSource("/events");
+      stream.addEventListener("order.updated", event => {
+        state.textContent = "已连接 · 持续接收";
+        output.textContent = JSON.stringify(JSON.parse(event.data), null, 2);
+      });
+      stream.onerror = () => { state.textContent = "正在重连"; };
+    </script>
+  </body>
+</html>

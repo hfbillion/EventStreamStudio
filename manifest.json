@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "EventStream Studio",
+  "version": "0.1.0",
+  "description": "在 Chrome DevTools 中捕获、检索并格式化展示 SSE / EventStream 报文。",
+  "minimum_chrome_version": "111",
+  "devtools_page": "devtools.html",
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["sse-parser.js", "inject-main.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-bridge.js"],
+      "run_at": "document_start",
+      "world": "ISOLATED"
+    }
+  ]
+}
